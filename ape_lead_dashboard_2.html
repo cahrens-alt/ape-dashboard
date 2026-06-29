@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APE Lead Dashboard — SDUSD 2026–27</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0C2340;
+    --navy-mid: #1a3a5c;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --teal-mid: #0F6E56;
+    --teal-dark: #085041;
+    --white: #ffffff;
+    --gray-50: #F8F9FA;
+    --gray-100: #F1F3F5;
+    --gray-200: #E9ECEF;
+    --gray-400: #ADB5BD;
+    --gray-600: #6C757D;
+    --gray-800: #343A40;
+    --border: rgba(0,0,0,0.08);
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--gray-100);
+    color: var(--gray-800);
+    min-height: 100vh;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--navy);
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .topbar-logo {
+    width: 28px;
+    height: 28px;
+    background: var(--teal);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
+  .topbar-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.02em;
+  }
+  .topbar-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 1px;
+  }
+  .topbar-leads {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .topbar-leads span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-right: 4px;
+  }
+  .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.02em;
+  }
+
+  /* LAYOUT */
+  .main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 24px 20px 48px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    align-items: start;
+  }
+  .col-left { display: flex; flex-direction: column; gap: 20px; }
+  .col-right { display: flex; flex-direction: column; gap: 20px; }
+
+  /* SECTION */
+  .section { background: var(--white); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+  .section-head {
+    padding: 14px 18px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .section-head-left { display: flex; align-items: center; gap: 8px; }
+  .section-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .section-badge {
+    font-size: 10px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 500;
+  }
+  .section-body { padding: 16px 18px; }
+
+  /* LINK GRID */
+  .link-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .link-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 13px;
+    background: var(--gray-50);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--gray-800);
+    transition: background 0.12s, border-color 0.12s, transform 0.1s;
+    cursor: pointer;
+  }
+  .link-card:hover {
+    background: var(--teal-light);
+    border-color: rgba(29,158,117,0.25);
+    transform: translateY(-1px);
+  }
+  .link-card:hover .link-icon { color: var(--teal-dark); background: white; }
+  .link-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    color: var(--gray-600);
+    transition: color 0.12s;
+  }
+  .link-text { flex: 1; min-width: 0; }
+  .link-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-800);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .link-sub {
+    font-size: 10px;
+    color: var(--gray-600);
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .link-arrow {
+    font-size: 11px;
+    color: var(--gray-400);
+    flex-shrink: 0;
+    transition: color 0.12s;
+  }
+  .link-card:hover .link-arrow { color: var(--teal-mid); }
+
+  /* AREA STRIP */
+  .area-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .area-btn {
+    background: var(--gray-50);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 6px 9px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+    display: block;
+  }
+  .area-btn:hover {
+    background: var(--teal-light);
+    border-color: rgba(29,158,117,0.25);
+  }
+  .area-btn-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    display: block;
+  }
+  .area-btn-sub {
+    font-size: 10px;
+    color: var(--gray-600);
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* CALENDAR */
+  .cal-legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--gray-50);
+  }
+  .leg { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--gray-600); }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .months-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  .month-block {
+    padding: 12px 14px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .month-block:nth-child(2n) { border-right: none; }
+  .month-block:nth-last-child(-n+2) { border-bottom: none; }
+
+  .month-name {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .day-hdrs {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 2px;
+  }
+  .day-hdr {
+    font-size: 8px;
+    color: var(--gray-400);
+    text-align: center;
+    font-weight: 600;
+  }
+  .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+  .dc {
+    font-size: 9px;
+    text-align: center;
+    border-radius: 3px;
+    padding: 2px 0;
+    color: var(--gray-800);
+    line-height: 1.5;
+    min-height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .dc.empty { color: transparent; }
+  .dc.wknd { color: var(--gray-400); }
+  .dc.no-school { background: #FAECE7; color: #712B13; font-weight: 600; border-radius: 3px; }
+  .dc.dept { background: var(--teal-light); color: var(--teal-dark); font-weight: 600; border-radius: 3px; }
+  .dc.first { background: var(--navy); color: white; font-weight: 700; border-radius: 50%; }
+  .dc.last { background: var(--teal); color: white; font-weight: 700; border-radius: 50%; }
+  .dc.today { outline: 2px solid var(--teal); border-radius: 50%; }
+
+  /* Tooltip */
+  .tip-wrap { position: relative; width: 100%; display: flex; align-items: center; justify-content: center; }
+  .tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--navy);
+    color: white;
+    font-size: 9px;
+    padding: 3px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 200;
+    pointer-events: none;
+    font-weight: 500;
+  }
+  .dc:hover .tip { display: block; }
+
+  /* QUICK LINKS */
+  .quick-list { display: flex; flex-direction: column; gap: 6px; }
+  .quick-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    background: var(--gray-50);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--gray-800);
+    transition: background 0.12s, border-color 0.12s;
+  }
+  .quick-link:hover {
+    background: var(--teal-light);
+    border-color: rgba(29,158,117,0.25);
+  }
+  .quick-link-icon { font-size: 14px; color: var(--gray-600); flex-shrink: 0; width: 18px; text-align: center; }
+  .quick-link:hover .quick-link-icon { color: var(--teal-dark); }
+  .quick-link-text { font-size: 12px; font-weight: 500; flex: 1; }
+  .quick-link-arrow { font-size: 10px; color: var(--gray-400); }
+  .quick-link:hover .quick-link-arrow { color: var(--teal-mid); }
+
+  /* CONTACT CARD */
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .contact-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .contact-row:first-child { padding-top: 0; }
+  .contact-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .contact-name { font-size: 12px; font-weight: 600; color: var(--gray-800); }
+  .contact-role { font-size: 10px; color: var(--gray-600); margin-top: 1px; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    font-size: 10px;
+    color: var(--gray-400);
+    padding: 16px 0 8px;
+    grid-column: 1 / -1;
+  }
+
+  /* DIVIDER */
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 0;
+  }
+
+  /* SVG icons inline */
+  .ico { display: inline-block; vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">APE</div>
+    <div>
+      <div class="topbar-title">APE Lead Dashboard — SDUSD</div>
+      <div class="topbar-sub">2026–27 School Year</div>
+    </div>
+  </div>
+  <div class="topbar-leads">
+    <span>Leads</span>
+    <div class="avatar" title="Chris Ahrens">CA</div>
+    <div class="avatar" title="Katrina McClanahan">KM</div>
+    <div class="avatar" title="Laura Brodfuehrer">LB</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- LEFT COLUMN -->
+  <div class="col-left">
+
+    <!-- CASELOAD & DATA -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-icon">📊</div>
+          <div class="section-title">Caseload &amp; data</div>
+        </div>
+        <span class="section-badge">39 teachers · 150+ sites</span>
+      </div>
+      <div class="section-body">
+        <div class="link-grid">
+          <a class="link-card" href="https://docs.google.com/spreadsheets/d/1v4iHRX7rI-49mFkEIWWJrm9RPRt0dJN91LkjDL0nkxM/edit?gid=1325172263#gid=1325172263" target="_blank">
+            <div class="link-icon">📈</div>
+            <div class="link-text">
+              <div class="link-title">Leads dashboard</div>
+              <div class="link-sub">Caseload metrics &amp; overview</div>
+            </div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card" href="https://docs.google.com/spreadsheets/d/1PA1eDMwgpDBklC1cBQ4Tg1oDIwTldYh2Tjig3oDnc0o/edit?gid=0#gid=0" target="_blank">
+            <div class="link-icon">🏫</div>
+            <div class="link-text">
+              <div class="link-title">Assignments by school</div>
+              <div class="link-sub">Which teacher at each site</div>
+            </div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card" href="https://docs.google.com/spreadsheets/d/1YOihU54yE-c_jRi1m7rPWhRpz_QW2RJhE92l3NeIm8M/edit?gid=0#gid=0" target="_blank">
+            <div class="link-icon">👤</div>
+            <div class="link-text">
+              <div class="link-title">Assignments by teacher</div>
+              <div class="link-sub">Each teacher's schools</div>
+            </div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card" href="https://www.google.com/maps/d/u/0/edit?mid=1cvnuKcrJdHY-zvrw1bXeNBQewr2dRGA&ll=32.80177492347448%2C-117.1437965&z=11" target="_blank">
+            <div class="link-icon">🗺️</div>
+            <div class="link-text">
+              <div class="link-title">Assignments map</div>
+              <div class="link-sub">Google My Maps view</div>
+            </div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card" href="https://docs.google.com/spreadsheets/d/1R8dZB8Md7c_U3FJHE9S6JSmTK86AJ9Z7Sd2CQ6Y9llo/edit?gid=842020016#gid=842020016" target="_blank">
+            <div class="link-icon">🗂️</div>
+            <div class="link-text">
+              <div class="link-title">Integrated services staffing</div>
+              <div class="link-sub">All services by school</div>
+            </div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card" href="https://docs.google.com/spreadsheets/d/14lE3bvTeu4I4BOC3sJqHPz24YnmXUYwB-4MWckOX05g/edit?gid=1821150560#gid=1821150560" target="_blank">
+            <div class="link-icon">📋</div>
+            <div class="link-text">
+              <div class="link-title">Initial assessment responses</div>
+              <div class="link-sub">Form submission log</div>
+            </div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card" href="https://docs.google.com/spreadsheets/d/1qo6orbA7MSPy7eUhlSI5v64zu00PY7RAmUPRTUL6Vs8/edit?gid=0#gid=0" target="_blank">
+            <div class="link-icon">📞</div>
+            <div class="link-text">
+              <div class="link-title">APE staff contacts</div>
+              <div class="link-sub">Phone &amp; email directory</div>
+            </div>
+            <div class="link-arrow">↗</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- CALENDAR -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-icon">📅</div>
+          <div class="section-title">Year at a glance — 2026–27</div>
+        </div>
+      </div>
+      <div class="cal-legend">
+        <div class="leg"><div class="leg-dot" style="background:#0C2340;"></div> First day back</div>
+        <div class="leg"><div class="leg-dot" style="background:#1D9E75;"></div> Last day</div>
+        <div class="leg"><div class="leg-dot" style="background:#F0997B;"></div> No school / break</div>
+        <div class="leg"><div class="leg-dot" style="background:#5DCAA5;"></div> Dept event</div>
+      </div>
+      <div class="months-grid" id="cal"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="col-right">
+
+    <!-- QUICK ACCESS -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-icon">⚡</div>
+          <div class="section-title">Quick access</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="quick-list">
+          <a class="quick-link" href="https://staff.sandiegounified.org/" target="_blank">
+            <span class="quick-link-icon">🏛️</span>
+            <span class="quick-link-text">SDUSD Staff Portal</span>
+            <span class="quick-link-arrow">↗</span>
+          </a>
+          <a class="quick-link" href="https://drive.google.com/drive/folders/0B1zd4RhafYDsTTNmV3V1WGtaUVU?resourcekey=0-rp2n5K6nHAl8cZTNpCKqjg&usp=sharing" target="_blank">
+            <span class="quick-link-icon">📁</span>
+            <span class="quick-link-text">APE Department Folder</span>
+            <span class="quick-link-arrow">↗</span>
+          </a>
+          <a class="quick-link" href="https://drive.google.com/drive/folders/0B4pcI-aoGaw5aUs2LTJuMl9jRXc?resourcekey=0-HykP235OWm25u1y-lEiTFA&usp=drive_link" target="_blank">
+            <span class="quick-link-icon">👥</span>
+            <span class="quick-link-text">All Staff Folder</span>
+            <span class="quick-link-arrow">↗</span>
+          </a>
+          <a class="quick-link" href="https://drive.google.com/drive/u/0/folders/1UQc1hXvyuz6x_CR11wo8xrYFKHUpyNXk" target="_blank">
+            <span class="quick-link-icon">📂</span>
+            <span class="quick-link-text">2026–27 Planning Folder</span>
+            <span class="quick-link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADS CONTACTS -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-icon">👋</div>
+          <div class="section-title">Lead team</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="contact-row">
+          <div class="contact-avatar">CA</div>
+          <div>
+            <div class="contact-name">Chris Ahrens</div>
+            <div class="contact-role">APE Lead · Henry High &amp; Pershing MS</div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-avatar">KM</div>
+          <div>
+            <div class="contact-name">Katrina McClanahan</div>
+            <div class="contact-role">APE Lead</div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-avatar">LB</div>
+          <div>
+            <div class="contact-name">Laura Brodfuehrer</div>
+            <div class="contact-role">APE Lead</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- UPCOMING -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-icon">🔔</div>
+          <div class="section-title">Key dates ahead</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div id="upcoming-dates" style="display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    APE Lead Dashboard · SDUSD · 2026–27 · Last updated June 2026
+  </div>
+
+</div>
+
+<script>
+// ── CALENDAR ──────────────────────────────────────────
+const events = {
+  "2026-08-05": { label: "Staff back / Staff Mtg 9–2", type: "first" },
+  "2026-08-10": { label: "Students report back", type: "dept" },
+  "2026-08-28": { label: "Schedules & caseloads due / Small Group Mtgs", type: "dept" },
+  "2026-09-07": { label: "Labor Day – No School", type: "no-school" },
+  "2026-10-12": { label: "Non-Instructional Day – No School", type: "no-school" },
+  "2026-11-05": { label: "Small Group Meetings", type: "dept" },
+  "2026-11-06": { label: "Small Group Meetings", type: "dept" },
+  "2026-11-11": { label: "Veterans Day – No School", type: "no-school" },
+  "2026-11-23": { label: "Thanksgiving Break", type: "no-school" },
+  "2026-11-24": { label: "Thanksgiving Break", type: "no-school" },
+  "2026-11-25": { label: "Thanksgiving Break", type: "no-school" },
+  "2026-11-26": { label: "Thanksgiving Break", type: "no-school" },
+  "2026-11-27": { label: "Thanksgiving Break", type: "no-school" },
+  "2026-12-21": { label: "Winter Break begins", type: "no-school" },
+  "2026-12-22": { label: "Winter Break", type: "no-school" },
+  "2026-12-23": { label: "Winter Break", type: "no-school" },
+  "2026-12-24": { label: "Winter Break", type: "no-school" },
+  "2026-12-25": { label: "Winter Break", type: "no-school" },
+  "2026-12-28": { label: "Winter Break", type: "no-school" },
+  "2026-12-29": { label: "Winter Break", type: "no-school" },
+  "2026-12-30": { label: "Winter Break", type: "no-school" },
+  "2026-12-31": { label: "Winter Break", type: "no-school" },
+  "2027-01-01": { label: "Winter Break / New Year's", type: "no-school" },
+  "2027-01-04": { label: "Winter Break ends", type: "no-school" },
+  "2027-01-18": { label: "MLK Day – No School", type: "no-school" },
+  "2027-02-05": { label: "Small Group Meetings", type: "dept" },
+  "2027-02-12": { label: "Presidents' Day – No School", type: "no-school" },
+  "2027-02-15": { label: "Presidents' Day – No School", type: "no-school" },
+  "2027-03-08": { label: "Non-Instructional Day – No School", type: "no-school" },
+  "2027-03-17": { label: "MS Teams Staff Meeting 2:30–3:30", type: "dept" },
+  "2027-03-29": { label: "Spring Break", type: "no-school" },
+  "2027-03-30": { label: "Spring Break", type: "no-school" },
+  "2027-03-31": { label: "Spring Break", type: "no-school" },
+  "2027-04-01": { label: "Spring Break", type: "no-school" },
+  "2027-04-02": { label: "Spring Break", type: "no-school" },
+  "2027-05-26": { label: "Last Day of School", type: "last" },
+  "2027-05-31": { label: "Memorial Day – No School", type: "no-school" }
+};
+
+const months = [
+  [2026,7,"August"],[2026,8,"September"],[2026,9,"October"],
+  [2026,10,"November"],[2026,11,"December"],[2027,0,"January"],
+  [2027,1,"February"],[2027,2,"March"],[2027,3,"April"],[2027,4,"May"]
+];
+
+const today = new Date();
+const todayStr = today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
+const cal = document.getElementById("cal");
+
+months.forEach(([yr,mo,name],idx) => {
+  const block = document.createElement("div");
+  block.className = "month-block";
+
+  const mname = document.createElement("div");
+  mname.className = "month-name";
+  mname.textContent = name + " " + yr;
+  block.appendChild(mname);
+
+  const hdrs = document.createElement("div");
+  hdrs.className = "day-hdrs";
+  ["Su","Mo","Tu","We","Th","Fr","Sa"].forEach(d=>{
+    const h=document.createElement("div");
+    h.className="day-hdr";h.textContent=d;hdrs.appendChild(h);
+  });
+  block.appendChild(hdrs);
+
+  const grid = document.createElement("div");
+  grid.className = "days-grid";
+  const firstDay = new Date(yr,mo,1).getDay();
+  const dim = new Date(yr,mo+1,0).getDate();
+
+  for(let i=0;i<firstDay;i++){
+    const e=document.createElement("div");e.className="dc empty";e.textContent=".";grid.appendChild(e);
+  }
+  for(let d=1;d<=dim;d++){
+    const cell=document.createElement("div");
+    const dow=new Date(yr,mo,d).getDay();
+    const ds=yr+"-"+String(mo+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+    const ev=events[ds];
+    let cls="dc";
+    if(ev) cls+=" "+ev.type;
+    else if(dow===0||dow===6) cls+=" wknd";
+    if(ds===todayStr) cls+=" today";
+    cell.className=cls;
+    if(ev){
+      const w=document.createElement("div");
+      w.className="tip-wrap";
+      w.textContent=d;
+      const t=document.createElement("div");
+      t.className="tip";t.textContent=ev.label;
+      w.appendChild(t);cell.appendChild(w);
+    } else {
+      cell.textContent=d;
+    }
+    grid.appendChild(cell);
+  }
+  block.appendChild(grid);
+  cal.appendChild(block);
+});
+
+// ── UPCOMING DATES ────────────────────────────────────
+const upcoming = Object.entries(events)
+  .map(([ds,ev])=>({ds,label:ev.label,type:ev.type,date:new Date(ds+"T00:00:00")}))
+  .filter(e=>e.date>=today)
+  .sort((a,b)=>a.date-b.date)
+  .slice(0,6);
+
+const upEl = document.getElementById("upcoming-dates");
+const typeColors = {
+  "first":   ["#0C2340","white"],
+  "last":    ["#1D9E75","white"],
+  "no-school": ["#FAECE7","#712B13"],
+  "dept":    ["#E1F5EE","#085041"]
+};
+
+upcoming.forEach(e=>{
+  const row=document.createElement("div");
+  row.style.cssText="display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,0.06);";
+  const d=e.date;
+  const mon=d.toLocaleString("en-US",{month:"short"});
+  const day=d.getDate();
+  const [bg,fg]=typeColors[e.type]||["#F1F3F5","#343A40"];
+  row.innerHTML=`
+    <div style="min-width:36px;height:36px;border-radius:7px;background:${bg};color:${fg};display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">
+      <span style="font-size:8px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;line-height:1;">${mon}</span>
+      <span style="font-size:14px;font-weight:700;line-height:1.1;">${day}</span>
+    </div>
+    <div style="flex:1;padding-top:2px;">
+      <div style="font-size:11px;font-weight:600;color:#0C2340;line-height:1.3;">${e.label}</div>
+      <div style="font-size:10px;color:#6C757D;margin-top:2px;">${d.toLocaleString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}</div>
+    </div>
+  `;
+  upEl.appendChild(row);
+});
+
+</script>
+
+</body>
+</html>
